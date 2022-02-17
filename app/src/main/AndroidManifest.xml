@@ -11,7 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestApp">
         <activity
-            android:name=".MainActivity"
+            android:name=".activites.SecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activites.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
