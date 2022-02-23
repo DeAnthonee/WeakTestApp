@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "225631687906",
+    "project_id": "tropical-plants-shop",
+    "storage_bucket": "tropical-plants-shop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225631687906:android:4e5fecbfbe66760f89babb",
+        "android_client_info": {
+          "package_name": "com.example.testapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225631687906-2d1qg06ohllaqibt6vnf1bb7ppfhd84s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnmlJjMokhyuG0w16WIa3fTnMHbjZ3tcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225631687906-2d1qg06ohllaqibt6vnf1bb7ppfhd84s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
