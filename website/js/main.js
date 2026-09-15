@@ -1,202 +1,135 @@
-/* Shared behaviour: fills business details from config.js, renders the
- * service catalog, handles the mobile nav and the pumping calculator. */
 (function () {
   "use strict";
+  var S = window.SITE || {};
+  var tokens = Object.assign({}, S.tokens || {});
+  var digits = String(tokens.PHONE || "").replace(/\D/g, "");
+  tokens.PHONE_TEL = digits.length === 10 ? "+1" + digits : digits.length === 11 ? "+" + digits : tokens.PHONE || "";
 
-  var cfg = window.SITE_CONFIG || { business: {}, services: [] };
-  var biz = cfg.business;
-
-  function formatPhone(digits) {
-    var d = String(digits || "").replace(/\D/g, "");
-    if (d.length === 11 && d.charAt(0) === "1") d = d.slice(1);
-    if (d.length !== 10) return digits || "";
-    return "(" + d.slice(0, 3) + ") " + d.slice(3, 6) + "-" + d.slice(6);
-  }
-
-  function normalizePhone(raw) {
-    var d = String(raw || "").replace(/\D/g, "");
-    if (d.length === 11 && d.charAt(0) === "1") d = d.slice(1);
-    return d.length === 10 ? d : null;
-  }
-
-  function getPath(obj, path) {
-    return path.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, obj);
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  function fill(str) {
+    return str.replace(/\[\[([A-Z0-9_]+)\]\]/g, function (m, key) {
+      return Object.prototype.hasOwnProperty.call(tokens, key) ? tokens[key] : m;
     });
   }
 
-  function applyConfig() {
-    document.querySelectorAll("[data-config]").forEach(function (el) {
-      var value = getPath(cfg, el.getAttribute("data-config"));
-      if (value != null) el.textContent = value;
-    });
-    document.querySelectorAll("[data-tel]").forEach(function (el) {
-      el.setAttribute("href", "tel:" + biz.phone);
-      if (el.getAttribute("data-tel") !== "keep-text") {
-        el.textContent = (el.getAttribute("data-tel") === "prefix" ? "Call " : "") + formatPhone(biz.phone);
-      }
-    });
-    document.querySelectorAll("[data-mailto]").forEach(function (el) {
-      el.setAttribute("href", "mailto:" + biz.email);
-      el.textContent = biz.email;
-    });
-    document.querySelectorAll("[data-hours]").forEach(function (el) {
-      el.innerHTML = (biz.hours || []).map(function (h) {
-        return "<li><span>" + escapeHtml(h.label) + "</span><span>" + escapeHtml(h.value) + "</span></li>";
-      }).join("");
-    });
-    document.querySelectorAll("[data-towns]").forEach(function (el) {
-      el.innerHTML = (biz.serviceTowns || []).map(function (t) {
-        return "<li>" + escapeHtml(t) + "</li>";
-      }).join("");
-    });
-    document.querySelectorAll("[data-year]").forEach(function (el) {
-      el.textContent = String(new Date().getFullYear());
-    });
-    document.title = document.title.replace("{{name}}", biz.name || "");
-  }
-
-  function renderServices() {
-    document.querySelectorAll("[data-services]").forEach(function (el) {
-      var mode = el.getAttribute("data-services");
-      el.innerHTML = cfg.services.map(function (s) {
-        var badge = s.emergency ? '<span class="badge">Emergency available</span>' : "";
-        if (mode === "detailed") {
-          return (
-            '<article class="service-detail" id="' + escapeHtml(s.id) + '">' +
-            "<h3>" + escapeHtml(s.name) + "</h3>" + badge +
-            '<p class="lead">' + escapeHtml(s.summary) + "</p>" +
-            "<p>" + escapeHtml(s.details) + "</p>" +
-            '<a class="btn btn-primary" href="contact.html?service=' + encodeURIComponent(s.id) + '">Request this service</a>' +
-            "</article>"
-          );
-        }
-        return (
-          '<a class="card service-card" href="services.html#' + escapeHtml(s.id) + '">' +
-          "<h3>" + escapeHtml(s.name) + "</h3>" +
-          "<p>" + escapeHtml(s.summary) + "</p>" + badge +
-          "</a>"
-        );
-      }).join("");
+  function inject(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    var node, nodes = [];
+    while ((node = walker.nextNode())) if (node.nodeValue.indexOf("[[") > -1) nodes.push(node);
+    nodes.forEach(function (n) { n.nodeValue = fill(n.nodeValue); });
+    var attrs = ["href", "content", "value", "placeholder", "aria-label"];
+    root.querySelectorAll("[href],[content],[value],[placeholder],[aria-label]").forEach(function (el) {
+      attrs.forEach(function (a) {
+        var v = el.getAttribute(a);
+        if (v && v.indexOf("[[") > -1) el.setAttribute(a, fill(v));
+      });
     });
   }
 
-  function setUpNav() {
-    var toggle = document.querySelector("[data-nav-toggle]");
-    var nav = document.getElementById("site-nav");
-    if (toggle && nav) {
+  function nav() {
+    var toggle = document.querySelector(".nav-toggle");
+    var menu = document.getElementById("nav");
+    if (toggle && menu) {
       toggle.addEventListener("click", function () {
-        var open = nav.classList.toggle("open");
+        var open = menu.classList.toggle("open");
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
       });
     }
-    var page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "") || "index";
-    document.querySelectorAll("#site-nav a[href]").forEach(function (a) {
-      var target = a.getAttribute("href").replace(/\.html$/, "");
-      if (target === page || (page === "index" && target === "index")) a.classList.add("active");
+    var here = location.pathname.replace(/index\.html$/, "");
+    document.querySelectorAll(".nav a").forEach(function (a) {
+      var href = a.getAttribute("href");
+      if (href.indexOf("#") === -1 && href === here) a.setAttribute("aria-current", "page");
     });
   }
 
-  /* Pumping interval estimate, based on the Penn State Extension table. */
-  function estimatePumping(tankGallons, occupants, hasDisposal) {
-    var years = 0.013 * tankGallons / occupants - 0.65;
-    if (hasDisposal) years *= 2 / 3;
-    years = Math.max(0.5, years);
-    var recommended = Math.min(5, Math.max(0.5, years));
-    return {
-      estimatedYears: Math.round(years * 10) / 10,
-      recommendedYears: Math.round(recommended * 10) / 10,
+  function forms() {
+    document.querySelectorAll("form[data-form]").forEach(function (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var button = form.querySelector("[type=submit]");
+        var data = { access_key: S.FORM_ACCESS_KEY, subject: form.getAttribute("data-form") + " from " + S.name + " website", from_name: S.name + " website" };
+        new FormData(form).forEach(function (v, k) { data[k] = v; });
+        if (data.botcheck) return;
+        button.disabled = true;
+        button.textContent = "Sending…";
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(data)
+        }).then(function (r) { return r.json(); }).then(function (res) {
+          if (!res.success) throw new Error(res.message || "Form rejected");
+          var msg = document.createElement("p");
+          msg.className = "form-msg";
+          msg.setAttribute("role", "status");
+          msg.textContent = "Got it, we'll call you within the hour.";
+          form.replaceWith(msg);
+          msg.focus();
+        }).catch(function () {
+          var err = form.querySelector(".form-error") || document.createElement("p");
+          err.className = "form-msg error form-error";
+          err.setAttribute("role", "alert");
+          err.textContent = "That didn't send. Call " + tokens.PHONE + " and we'll take it by phone.";
+          if (!err.parentNode) form.appendChild(err);
+          button.disabled = false;
+          button.textContent = button.getAttribute("data-label") || "Request a quote";
+        });
+      });
+    });
+  }
+
+  function text(el) { return el ? el.textContent.replace(/\s+/g, " ").trim() : ""; }
+
+  function schema() {
+    var body = document.body;
+    var types = (body.getAttribute("data-schema") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    var url = S.url || location.origin;
+    var canonical = document.querySelector("link[rel=canonical]");
+    var pageUrl = canonical ? canonical.href : location.href;
+    var cityName = body.getAttribute("data-area");
+    var areaServed = (S.cities || []).filter(function (c) { return !cityName || c.name === cityName; })
+      .map(function (c) { return { "@type": "City", name: c.name + ", WA" }; });
+    var business = {
+      "@type": "LocalBusiness",
+      "@id": url + "/#business",
+      name: S.name,
+      legalName: S.legalName,
+      url: url,
+      telephone: tokens.PHONE,
+      email: tokens.EMAIL,
+      image: url + "/assets/og.png",
+      priceRange: "$$",
+      address: { "@type": "PostalAddress", streetAddress: tokens.STREET, addressLocality: S.address.city, addressRegion: S.address.region, addressCountry: S.address.country },
+      areaServed: (S.cities || []).map(function (c) { return { "@type": "City", name: c.name + ", WA" }; }),
+      openingHoursSpecification: S.openingHours,
+      sameAs: [tokens.GOOGLE_BUSINESS_PROFILE_URL].concat(S.sameAs || []).filter(function (u) { return u && u.indexOf("[[") === -1; })
     };
-  }
-
-  function addMonths(date, months) {
-    var d = new Date(date.getTime());
-    d.setMonth(d.getMonth() + months);
-    return d;
-  }
-
-  function setUpCalculator() {
-    var form = document.querySelector("[data-calculator]");
-    if (!form) return;
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var tank = parseInt(form.elements.tank.value, 10);
-      var people = parseInt(form.elements.people.value, 10);
-      var disposal = form.elements.disposal.checked;
-      var last = form.elements.last && form.elements.last.value ? new Date(form.elements.last.value + "T00:00:00") : null;
-      var out = form.querySelector("[data-calc-result]");
-      if (!(tank >= 250 && tank <= 5000)) {
-        out.innerHTML = '<p class="error">Enter a tank size between 250 and 5,000 gallons.</p>';
-        return;
-      }
-      if (!(people >= 1 && people <= 20)) {
-        out.innerHTML = '<p class="error">Enter a household size between 1 and 20.</p>';
-        return;
-      }
-      var r = estimatePumping(tank, people, disposal);
-      var note = r.estimatedYears > r.recommendedYears
-        ? "Your tank could go roughly " + r.estimatedYears + " years, but we recommend service at least every 5 years to catch problems early."
-        : "Based on the Penn State Extension pumping guide. Call us for a free assessment.";
-      var dueHtml = "";
-      if (last && !isNaN(last.getTime())) {
-        var due = addMonths(last, Math.round(r.recommendedYears * 12));
-        var dueText = due.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-        dueHtml = due < new Date()
-          ? '<p class="result" style="color:var(--emergency)">Overdue: service was due around ' + dueText + "</p>"
-          : '<p class="result">Next service due around <strong>' + dueText + "</strong></p>";
-      }
-      out.innerHTML =
-        '<p class="result">Pump about every <strong>' + r.recommendedYears + " years</strong></p>" +
-        dueHtml +
-        "<p>" + escapeHtml(note) + "</p>" +
-        '<a class="btn btn-primary" href="contact.html?service=pumping">Schedule pumping</a>';
-    });
-  }
-
-  /* Progressive web app: offline cache + "Install app" button. */
-  function setUpPwa() {
-    if ("serviceWorker" in navigator && location.protocol !== "file:") {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").catch(function (err) { console.warn("Service worker not registered", err); });
+    var graph = [business];
+    if (types.indexOf("Service") > -1) {
+      graph.push({
+        "@type": "Service",
+        "@id": pageUrl + "#service",
+        name: body.getAttribute("data-service-name") || text(document.querySelector("h1")),
+        description: body.getAttribute("data-service-desc") || text(document.querySelector("meta[name=description]")),
+        serviceType: body.getAttribute("data-service-type") || "Septic service",
+        provider: { "@id": url + "/#business" },
+        areaServed: areaServed,
+        url: pageUrl
       });
     }
-    var deferredPrompt = null;
-    var buttons = document.querySelectorAll("[data-install]");
-    window.addEventListener("beforeinstallprompt", function (e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      buttons.forEach(function (b) { b.hidden = false; });
-    });
-    window.addEventListener("appinstalled", function () {
-      deferredPrompt = null;
-      buttons.forEach(function (b) { b.hidden = true; });
-    });
-    buttons.forEach(function (b) {
-      b.addEventListener("click", function () {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(function () { deferredPrompt = null; b.hidden = true; });
+    if (types.indexOf("FAQPage") > -1) {
+      var qa = [];
+      document.querySelectorAll(".faq details").forEach(function (d) {
+        qa.push({ "@type": "Question", name: text(d.querySelector("summary")), acceptedAnswer: { "@type": "Answer", text: text(d.querySelector(".answer")) } });
       });
-    });
+      if (qa.length) graph.push({ "@type": "FAQPage", "@id": pageUrl + "#faq", mainEntity: qa });
+    }
+    var script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+    document.head.appendChild(script);
   }
 
-  window.KS = {
-    config: cfg,
-    formatPhone: formatPhone,
-    normalizePhone: normalizePhone,
-    escapeHtml: escapeHtml,
-    estimatePumping: estimatePumping,
-  };
-
-  document.addEventListener("DOMContentLoaded", function () {
-    applyConfig();
-    renderServices();
-    setUpNav();
-    setUpCalculator();
-    setUpPwa();
-  });
+  inject(document.documentElement);
+  nav();
+  forms();
+  schema();
 })();
