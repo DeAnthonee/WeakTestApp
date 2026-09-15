@@ -76,6 +76,21 @@
     });
   }
 
+  function anchors() {
+    function jump() {
+      var id = location.hash.slice(1);
+      var target = id && document.getElementById(id);
+      if (!target) return;
+      document.documentElement.classList.add("anchoring");
+      target.scrollIntoView();
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { document.documentElement.classList.remove("anchoring"); });
+      });
+    }
+    window.addEventListener("load", jump);
+    window.addEventListener("hashchange", jump);
+  }
+
   function text(el) { return el ? el.textContent.replace(/\s+/g, " ").trim() : ""; }
 
   function schema() {
@@ -130,6 +145,7 @@
 
   inject(document.documentElement);
   nav();
+  anchors();
   forms();
   schema();
 })();
