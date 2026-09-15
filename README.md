@@ -1,7 +1,8 @@
 # King Septic Services
 
-Website and Android app for a septic service business. One repo, one shared
-backend, one place to change the business details.
+Website and installable web app for a septic service business. Plain HTML,
+CSS and JavaScript with no build step, so it can be hosted anywhere. Visitors
+can add it to their phone's home screen and it keeps working offline.
 
 > The business name, phone number, email and service area in this repo are
 > **placeholders**. See [Make it yours](#make-it-yours) to change them.
@@ -9,82 +10,69 @@ backend, one place to change the business details.
 ## What's here
 
 ```
-├── website/                 Static marketing site + "request service" form
-│   ├── index.html           Home: hero, services, how it works, pumping calculator
-│   ├── services.html        Service catalog with details
-│   ├── about.html           About the company, service area, hours
-│   ├── contact.html         Request service / free quote form
-│   ├── js/config.js         <-- business details + service list live here
-│   ├── js/main.js           Fills config into the pages, nav, calculator
-│   └── js/quote-form.js     Form validation + Firestore (or email) submission
-├── android/                 Android app (Kotlin, Material 3)
-│   ├── domain/              Pure Kotlin business rules + unit tests (no Android SDK needed)
-│   └── app/                 The app: Home, Services, Request service, Maintenance
-├── firebase.json            Firebase Hosting (website) + Firestore config
-├── firestore.rules          Security rules for the shared `serviceRequests` collection
-└── .github/workflows/       CI: builds and tests the app, checks the website
+├── website/                    The site / web app (deploy this folder)
+│   ├── index.html              Home: hero, services, how it works, pumping calculator
+│   ├── services.html           Service catalog with details
+│   ├── maintenance.html        Septic care guide: calculator, warning signs, tips
+│   ├── about.html              About the company, service area, hours
+│   ├── contact.html            Request service / free quote form
+│   ├── 404.html                Not-found page
+│   ├── manifest.webmanifest    Web app name, icons and colors (for "Add to home screen")
+│   ├── sw.js                   Service worker: offline cache
+│   ├── css/styles.css          All styles; brand colors are variables at the top
+│   ├── js/config.js            <-- business details + service list live here
+│   ├── js/main.js              Fills config into the pages, nav, calculator, install button
+│   ├── js/quote-form.js        Form validation + Firestore (or email) submission
+│   └── assets/                 Logo and app icons
+├── firebase.json               Firebase Hosting + Firestore config
+├── firestore.rules             Security rules for the `serviceRequests` collection
+└── .github/workflows/          CI: syntax and link checks for the site
 ```
 
-### The app
+### Features
 
-| Screen | What it does |
-| --- | --- |
-| Home | Tagline, one-tap call, request service, emergency card, hours |
-| Services | Catalog of services, each with a "request this service" button |
-| Request service | Form with validation. Saves to Firestore, or opens the email app if Firebase isn't configured |
-| Maintenance | Pumping-interval calculator, "next service due" date, warning signs, care tips |
-
-### The website
-
-Plain HTML, CSS and JavaScript. No build step, no framework, so it can be
-hosted anywhere (Firebase Hosting, Netlify, GitHub Pages, cPanel). The contact
-form saves to Firestore when configured, otherwise it opens the visitor's email
-app with the request filled in.
+* **Request service form** with validation. Saves to Firestore when Firebase is
+  configured; otherwise it opens the visitor's email app with the request
+  filled in. `contact.html?service=pumping` preselects a service.
+* **Pumping calculator** (home and care guide): estimates the pumping interval
+  from tank size, household size and garbage-disposal use, and the next due
+  date from the last service.
+* **Septic care guide**: warning signs of trouble and eight maintenance tips.
+* **One-tap call** everywhere, with a 24/7 emergency band.
+* **Web app**: installable on Android, iOS and desktop; pages and assets are
+  cached for offline use; an "Install app" button appears when the browser
+  offers installation.
 
 ## Quick start
 
-### Website
-
-Open `website/index.html` in a browser, or serve the folder:
+Open `website/index.html` in a browser, or serve the folder (the service
+worker and install prompt need `http://` or `https://`, not `file://`):
 
 ```bash
 cd website
 python3 -m http.server 8080     # then open http://localhost:8080
 ```
 
-### Android app
-
-1. Install [Android Studio](https://developer.android.com/studio) (Ladybug or newer, JDK 17 bundled).
-2. **File → Open** and choose the `android/` folder.
-3. Run the `app` configuration on an emulator or phone (Android 8.0+).
-
-From the command line:
-
-```bash
-cd android
-./gradlew :domain:test :app:testDebugUnitTest   # unit tests
-./gradlew :app:assembleDebug                    # APK in app/build/outputs/apk/debug/
-```
-
-The `domain` module has no Android dependencies, so its tests run anywhere
-with a JDK.
-
 ## Make it yours
 
 | What | Where |
 | --- | --- |
-| Business name, phone, email, hours, service area | `website/js/config.js` **and** `android/app/src/main/res/values/strings.xml` (the "Business details" block) |
-| List of services | `website/js/config.js` (`services`) **and** `android/domain/src/main/kotlin/com/kingseptic/domain/SepticService.kt`. Keep the `id`s identical in both. |
-| Colors | `website/css/styles.css` (`:root` variables) and `android/app/src/main/res/values/colors.xml` |
-| Logo / app icon | `website/assets/logo.svg`, `website/favicon.svg`, `android/app/src/main/res/drawable/ic_launcher_foreground.xml` |
+| Business name, phone, email, hours, service area, towns | `website/js/config.js` |
+| Name and colors of the installed app | `website/manifest.webmanifest`, and the `theme-color` / `apple-mobile-web-app-title` tags in each page's `<head>` |
+| List of services | `website/js/config.js` (`services`) |
+| Colors | `website/css/styles.css` (`:root` variables) |
+| Logo and icons | `website/assets/logo.svg`, `website/favicon.svg`, `website/assets/icon-*.png` |
 | Page copy | The `.html` files in `website/` |
-| Android package name | `com.kingseptic.app` in `android/app/build.gradle` (`applicationId` and `namespace`) plus the folder names under `src/main/java`. Android Studio's **Refactor → Rename** on the package does this safely. |
+
+After changing any file listed in `sw.js`'s `SHELL` array, bump its `VERSION`
+string so installed copies pick up the new files.
 
 ## Firebase (optional, recommended)
 
-Without Firebase everything still works: requests from the website and the app
-are handed to an email app addressed to your business email. With Firebase,
-requests are stored in Firestore where you can see them in the console.
+Without Firebase everything still works: requests are handed to an email app
+addressed to your business email. With Firebase, requests are stored in
+Firestore where you can see them in the console, and the site can be hosted on
+Firebase Hosting.
 
 1. Create a project at <https://console.firebase.google.com> and enable **Firestore** (production mode).
 2. Install the CLI and deploy the security rules from the repo root:
@@ -94,38 +82,32 @@ requests are stored in Firestore where you can see them in the console.
    firebase use --add          # pick your project
    firebase deploy --only firestore:rules
    ```
-3. **Website:** in Project settings → *Your apps* add a **Web** app, copy its
+3. In Project settings → *Your apps* add a **Web** app and copy its
    `firebaseConfig` object into `website/js/config.js` as the `firebase` value.
-   To host the site on Firebase too: `firebase deploy --only hosting`.
-4. **Android:** in Project settings → *Your apps* add an **Android** app with the
-   package name `com.kingseptic.app`, download `google-services.json` and put it
-   at `android/app/google-services.json` (it is git-ignored). Rebuild the app.
+4. To host the site on Firebase: `firebase deploy --only hosting`.
 
 Requests land in the `serviceRequests` collection with these fields:
 `customerName`, `phone` (10 digits), `email`, `address`, `serviceId`,
-`serviceName`, `preferredDate`, `notes`, `isEmergency`, `source`
-(`web`/`android`), `status` (`new`), `createdAt`. The rules in
-`firestore.rules` only allow anonymous *creates* that match this shape; reading
-and managing requests happens in the Firebase console (or a future admin tool).
+`serviceName`, `preferredDate`, `notes`, `isEmergency`, `source` (`web`),
+`status` (`new`), `createdAt`. The rules in `firestore.rules` only allow
+anonymous *creates* that match this shape; reading and managing requests
+happens in the Firebase console (or a future admin tool).
+
+## Hosting elsewhere
+
+Any static host works: upload the contents of `website/` to Netlify, GitHub
+Pages, Cloudflare Pages or a cPanel `public_html`. The service worker needs
+HTTPS, which all of these provide.
 
 ## Pumping calculator
 
-Both the app and the website estimate a pumping interval from tank size and
-household size using the widely published Penn State Extension table
+The estimate uses the widely published Penn State Extension table
 (approximately `years = 0.013 × gallons ÷ people − 0.65`, scaled by ⅔ with a
 garbage disposal). The recommendation shown to customers is capped at 5 years.
-See `PumpingScheduleCalculator.kt` and its tests.
-
-## CI
-
-* **Android** workflow: validates the Gradle wrapper, runs unit tests and
-  builds a debug APK (downloadable from the workflow run).
-* **Website** workflow: syntax-checks the JavaScript and verifies that every
-  page only links to files that exist.
 
 ## Ideas for later
 
-* Customer accounts with service history and "next pumping due" push reminders
-* An admin screen or dashboard for dispatching and updating request status
+* Customer accounts with service history and "next pumping due" reminders
+* An admin screen for dispatching and updating request status
 * Online payments and invoices
-* Reviews / testimonials section on the site
+* Reviews / testimonials section

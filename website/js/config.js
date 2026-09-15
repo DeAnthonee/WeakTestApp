@@ -1,7 +1,6 @@
 /*
- * Site configuration. This is the ONE place to change business details for
- * the website. The Android app keeps the same values in
- * android/app/src/main/res/values/strings.xml.
+ * Site configuration. This is the ONE place to change business details.
+ * (The app name shown when installed lives in manifest.webmanifest.)
  */
 window.SITE_CONFIG = {
   business: {
@@ -21,7 +20,7 @@ window.SITE_CONFIG = {
     license: "Licensed & insured · Lic. #0000000",
   },
 
-  // Keep ids in sync with android/domain/.../SepticService.kt
+  // Service catalog. `id` is used in URLs and stored with each request.
   services: [
     {
       id: "pumping",

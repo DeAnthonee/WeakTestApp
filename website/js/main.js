@@ -101,8 +101,7 @@
     });
   }
 
-  /* Pumping interval estimate (same formula as the Android app's
-   * PumpingScheduleCalculator, based on the Penn State Extension table). */
+  /* Pumping interval estimate, based on the Penn State Extension table. */
   function estimatePumping(tankGallons, occupants, hasDisposal) {
     var years = 0.013 * tankGallons / occupants - 0.65;
     if (hasDisposal) years *= 2 / 3;
@@ -114,6 +113,12 @@
     };
   }
 
+  function addMonths(date, months) {
+    var d = new Date(date.getTime());
+    d.setMonth(d.getMonth() + months);
+    return d;
+  }
+
   function setUpCalculator() {
     var form = document.querySelector("[data-calculator]");
     if (!form) return;
@@ -122,6 +127,7 @@
       var tank = parseInt(form.elements.tank.value, 10);
       var people = parseInt(form.elements.people.value, 10);
       var disposal = form.elements.disposal.checked;
+      var last = form.elements.last && form.elements.last.value ? new Date(form.elements.last.value + "T00:00:00") : null;
       var out = form.querySelector("[data-calc-result]");
       if (!(tank >= 250 && tank <= 5000)) {
         out.innerHTML = '<p class="error">Enter a tank size between 250 and 5,000 gallons.</p>';
@@ -135,10 +141,46 @@
       var note = r.estimatedYears > r.recommendedYears
         ? "Your tank could go roughly " + r.estimatedYears + " years, but we recommend service at least every 5 years to catch problems early."
         : "Based on the Penn State Extension pumping guide. Call us for a free assessment.";
+      var dueHtml = "";
+      if (last && !isNaN(last.getTime())) {
+        var due = addMonths(last, Math.round(r.recommendedYears * 12));
+        var dueText = due.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+        dueHtml = due < new Date()
+          ? '<p class="result" style="color:var(--emergency)">Overdue: service was due around ' + dueText + "</p>"
+          : '<p class="result">Next service due around <strong>' + dueText + "</strong></p>";
+      }
       out.innerHTML =
         '<p class="result">Pump about every <strong>' + r.recommendedYears + " years</strong></p>" +
+        dueHtml +
         "<p>" + escapeHtml(note) + "</p>" +
         '<a class="btn btn-primary" href="contact.html?service=pumping">Schedule pumping</a>';
+    });
+  }
+
+  /* Progressive web app: offline cache + "Install app" button. */
+  function setUpPwa() {
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function (err) { console.warn("Service worker not registered", err); });
+      });
+    }
+    var deferredPrompt = null;
+    var buttons = document.querySelectorAll("[data-install]");
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      buttons.forEach(function (b) { b.hidden = false; });
+    });
+    window.addEventListener("appinstalled", function () {
+      deferredPrompt = null;
+      buttons.forEach(function (b) { b.hidden = true; });
+    });
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () { deferredPrompt = null; b.hidden = true; });
+      });
     });
   }
 
@@ -155,5 +197,6 @@
     renderServices();
     setUpNav();
     setUpCalculator();
+    setUpPwa();
   });
 })();

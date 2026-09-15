@@ -1,26 +1,12 @@
-# Gradle / Android
-.gradle/
-build/
-local.properties
-captures/
-.externalNativeBuild/
-.cxx/
-*.apk
-*.aab
-*.iml
-
-# Firebase config is per-project; drop your own copy in android/app/ (see README)
-android/app/google-services.json
+# Firebase (per-project files)
 .firebase/
 .firebaserc
 firebase-debug.log
 
-# IDE
+# IDE / OS
 .idea/
-*.swp
 .vscode/
-
-# OS
+*.swp
 .DS_Store
 Thumbs.db
 

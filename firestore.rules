@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Shared backend for the website and the Android app.
+// Backend for the website / web app.
 //
 // Customers (anonymous) may CREATE a service request. Nobody may read, update
 // or delete requests from a client: staff handle them in the Firebase console
@@ -24,7 +24,7 @@ service cloud.firestore {
         && d.address is string && d.address.size() >= 5 && d.address.size() <= 300
         && d.serviceId is string && d.serviceId.matches('^[a-z][a-z0-9-]{1,40}$')
         && d.status == 'new'
-        && d.source in ['android', 'web']
+        && d.source == 'web'
         && d.createdAt is timestamp
         && (!('email' in d) || (d.email is string && d.email.size() <= 200))
         && (!('serviceName' in d) || (d.serviceName is string && d.serviceName.size() <= 120))

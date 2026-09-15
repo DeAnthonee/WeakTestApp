@@ -47,8 +47,7 @@
     };
   }
 
-  /* Mirrors ServiceRequestValidator in the Android app. */
-  function validate(r) {
+    function validate(r) {
     var errors = {};
     if (r.customerName.length < 2) errors.name = "Please enter your name.";
     if (!KS.normalizePhone(r.phone)) errors.phone = "Please enter a valid 10-digit phone number.";
