@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand palette: deep water teal, field green, safety amber. -->
+    <color name="brand_primary">#0F4C5C</color>
+    <color name="brand_primary_dark">#0A3542</color>
+    <color name="brand_on_primary">#FFFFFF</color>
+    <color name="brand_primary_container">#CDEBF2</color>
+    <color name="brand_on_primary_container">#052833</color>
+
+    <color name="brand_secondary">#3A7D44</color>
+    <color name="brand_on_secondary">#FFFFFF</color>
+    <color name="brand_secondary_container">#D8F0DA</color>
+    <color name="brand_on_secondary_container">#0E3316</color>
+
+    <color name="brand_accent">#F2A93B</color>
+    <color name="brand_on_accent">#2B1B00</color>
+
+    <color name="brand_emergency">#B3261E</color>
+    <color name="brand_on_emergency">#FFFFFF</color>
+    <color name="brand_emergency_container">#F9DEDC</color>
+
+    <!-- Night variants -->
+    <color name="brand_primary_night">#8FD3E3</color>
+    <color name="brand_on_primary_night">#003640</color>
+    <color name="brand_primary_container_night">#1E5A6B</color>
+    <color name="brand_on_primary_container_night">#CDEBF2</color>
+    <color name="brand_secondary_night">#9BD59F</color>
+    <color name="brand_on_secondary_night">#0E3316</color>
+    <color name="brand_secondary_container_night">#2A5B31</color>
+    <color name="brand_on_secondary_container_night">#D8F0DA</color>
+
+    <color name="ic_launcher_background">#0F4C5C</color>
+</resources>

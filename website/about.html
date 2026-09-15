@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About | {{name}}</title>
+  <meta name="description" content="A locally owned septic company: who we are, how we work and where we serve.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="topbar">24/7 emergency service &middot; <a data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span data-config="business.name">King Septic Services</span></a>
+      <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu">&#9776;</button>
+      <nav id="site-nav" class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="btn btn-accent" data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>About <span data-config="business.name">King Septic Services</span></h1>
+          <p class="lead">A locally owned and operated septic company serving <span data-config="business.serviceArea">Anytown County and surrounding areas</span>.</p>
+        </div>
+        <div class="grid grid-2">
+          <div>
+            <p>We handle everything a septic system needs over its life: routine pumping, inspections for home sales, repairs when something fails, and full system design and installation when it's time for a new one.</p>
+            <p>Septic work is not glamorous, but it matters. A neglected system is expensive to replace and unpleasant to live with. Our job is to keep yours out of sight and out of mind, and to be straight with you about what it needs and what it doesn't.</p>
+            <p><span data-config="business.license">Licensed &amp; insured</span>.</p>
+          </div>
+          <div class="info-card">
+            <h3>Service area</h3>
+            <ul class="towns" data-towns></ul>
+            <h3>Hours</h3>
+            <ul class="hours" data-hours></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>How we work</h2>
+        </div>
+        <div class="values">
+          <div class="card"><h3>Show up when we say</h3><p>You get an arrival window and a heads-up when the truck is on the way.</p></div>
+          <div class="card"><h3>Upfront pricing</h3><p>You know the price before we start. If we find something else, we explain it and let you decide.</p></div>
+          <div class="card"><h3>Do it right</h3><p>We follow the code, pull the permits, and don't cut corners you can't see.</p></div>
+          <div class="card"><h3>Leave it clean</h3><p>Lids closed, holes filled, hoses rinsed. You shouldn't be able to tell we were there.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="emergency-band">
+      <div class="container">
+        <div>
+          <h2>Ready when you are</h2>
+          <p>Call for a free estimate or send a request and we'll call you back.</p>
+        </div>
+        <a class="btn btn-lg" data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong data-config="business.name">King Septic Services</strong>
+        <p data-config="business.tagline">Septic pumping, repair and installation you can count on</p>
+        <p data-config="business.license">Licensed &amp; insured</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a data-tel href="tel:5550100100">(555) 010-0100</a></li>
+          <li><a data-mailto href="mailto:office@example.com">office@example.com</a></li>
+          <li data-config="business.serviceArea">Anytown County and surrounding areas</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hours</h4>
+        <ul class="hours" data-hours></ul>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">&copy; <span data-year>2026</span> <span data-config="business.name">King Septic Services</span>. All rights reserved.</div>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body></html>

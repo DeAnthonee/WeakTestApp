@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// Shared backend for the website and the Android app.
+//
+// Customers (anonymous) may CREATE a service request. Nobody may read, update
+// or delete requests from a client: staff handle them in the Firebase console
+// or a future admin tool that uses the Admin SDK.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /serviceRequests/{requestId} {
+      allow create: if isValidServiceRequest(request.resource.data);
+      allow read, update, delete: if false;
+    }
+
+    function isValidServiceRequest(d) {
+      return d.keys().hasAll(['customerName', 'phone', 'address', 'serviceId', 'status', 'source', 'createdAt'])
+        && d.keys().hasOnly([
+          'customerName', 'phone', 'email', 'address', 'serviceId', 'serviceName',
+          'preferredDate', 'notes', 'isEmergency', 'source', 'status', 'createdAt'
+        ])
+        && d.customerName is string && d.customerName.size() >= 2 && d.customerName.size() <= 120
+        && d.phone is string && d.phone.matches('^[0-9]{10}$')
+        && d.address is string && d.address.size() >= 5 && d.address.size() <= 300
+        && d.serviceId is string && d.serviceId.matches('^[a-z][a-z0-9-]{1,40}$')
+        && d.status == 'new'
+        && d.source in ['android', 'web']
+        && d.createdAt is timestamp
+        && (!('email' in d) || (d.email is string && d.email.size() <= 200))
+        && (!('serviceName' in d) || (d.serviceName is string && d.serviceName.size() <= 120))
+        && (!('preferredDate' in d) || (d.preferredDate is string && d.preferredDate.size() <= 200))
+        && (!('notes' in d) || (d.notes is string && d.notes.size() <= 2000))
+        && (!('isEmergency' in d) || d.isEmergency is bool);
+    }
+  }
+}
