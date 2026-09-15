@@ -1,0 +1,28 @@
+name: Website
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  check:
+    name: Syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: for f in website/js/*.js website/sw.js; do node --check "$f"; done
+      - name: Check every page links to existing local files
+        run: |
+          set -e
+          cd website
+          for page in *.html; do
+            for ref in $(grep -oE '(href|src)="[^"#?]+' "$page" | sed -E 's/^(href|src)="//' | sort -u); do
+              case "$ref" in tel:*|mailto:*|http*) continue;; esac
+              [ -e "$ref" ] || { echo "$page references missing file: $ref"; exit 1; }
+            done
+          done

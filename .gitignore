@@ -1,15 +1,14 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+# Firebase (per-project files)
+.firebase/
+.firebaserc
+firebase-debug.log
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+Thumbs.db
+
+# Node (only if you add tooling to the website)
+node_modules/

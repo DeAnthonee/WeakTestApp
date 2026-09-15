@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{name}} | Septic Pumping, Repair &amp; Installation</title>
+  <meta name="description" content="Licensed and insured septic pumping, inspections, repairs and installations. Free estimates and 24/7 emergency service.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0F4C5C">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="King Septic">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="topbar">24/7 emergency service &middot; <a data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html"><img src="assets/logo.svg" alt=""><span data-config="business.name">King Septic Services</span></a>
+      <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="site-nav" aria-label="Menu">&#9776;</button>
+      <nav id="site-nav" class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="maintenance.html">Maintenance</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <button class="btn btn-primary" type="button" data-install hidden>Install app</button>
+        <a class="btn btn-accent" data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <h1 data-config="business.tagline">Septic pumping, repair and installation you can count on</h1>
+          <p class="lead">Serving <span data-config="business.serviceArea">Anytown County and surrounding areas</span>. Licensed, insured and family owned, with free estimates and 24/7 emergency service.</p>
+          <div class="hero-actions">
+            <a class="btn btn-accent btn-lg" data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a>
+            <a class="btn btn-outline btn-lg" href="contact.html">Request a free quote</a>
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <h3>Why homeowners call us</h3>
+          <ul>
+            <li>Upfront pricing, no surprises</li>
+            <li>On-time arrival windows</li>
+            <li>Clean, careful crews</li>
+            <li>Written service records for every visit</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="trust">
+      <div class="container trust-grid">
+        <div class="trust-item"><span class="dot"></span>Licensed &amp; insured</div>
+        <div class="trust-item"><span class="dot"></span>24/7 emergency service</div>
+        <div class="trust-item"><span class="dot"></span>Free estimates</div>
+        <div class="trust-item"><span class="dot"></span>Locally owned &amp; operated</div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-head">
+          <h2>Our services</h2>
+          <p class="lead">From routine pumping to full system installs, one call covers it.</p>
+        </div>
+        <div class="grid grid-3" data-services="cards"></div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>How it works</h2>
+          <p class="lead">Getting service is simple.</p>
+        </div>
+        <div class="grid grid-3 steps">
+          <div class="step"><h3>Call or request online</h3><p class="muted">Tell us what's going on and where. We'll give you a straight answer and a price range.</p></div>
+          <div class="step"><h3>We schedule and show up</h3><p class="muted">You get an arrival window and a text when we're on the way. Emergencies jump the line.</p></div>
+          <div class="step"><h3>Done right, site left clean</h3><p class="muted">We do the work, walk you through what we found, and leave a written record for your files.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="calculator">
+      <div class="container calc">
+        <div class="calc-grid">
+          <div>
+            <h2>When should I pump my tank?</h2>
+            <p class="muted">Estimate your pumping interval from tank size and household size. Most homes need service every 3 to 5 years.</p>
+            <form data-calculator novalidate>
+              <div class="form-grid">
+                <div>
+                  <label for="calc-tank">Tank size (gallons)</label>
+                  <input id="calc-tank" name="tank" type="number" min="250" max="5000" step="50" value="1000">
+                </div>
+                <div>
+                  <label for="calc-people">People in the household</label>
+                  <input id="calc-people" name="people" type="number" min="1" max="20" value="4">
+                </div>
+                <div class="full">
+                  <label class="check"><input name="disposal" type="checkbox"> We use a garbage disposal</label>
+                </div>
+                <div class="full">
+                  <button class="btn btn-primary" type="submit">Calculate</button>
+                </div>
+              </div>
+              <div class="calc-output" data-calc-result style="margin-top:1.25rem"></div>
+            </form>
+          </div>
+          <div>
+            <h3>Warning signs of trouble</h3>
+            <p class="muted">If you notice any of these, call before it becomes a backup.</p>
+            <ul>
+              <li>Slow drains or gurgling sounds in the plumbing</li>
+              <li>Sewage odors inside or near the tank and drain field</li>
+              <li>Soggy ground, standing water or unusually green grass over the drain field</li>
+              <li>Sewage backing up into tubs, showers or floor drains</li>
+              <li>A high-water or pump alarm sounding</li>
+            </ul>
+            <p><a class="btn btn-primary" href="maintenance.html">Septic care guide</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="emergency-band">
+      <div class="container">
+        <div>
+          <h2>Sewage backup or alarm sounding?</h2>
+          <p>We answer 24/7. Call now and we'll get a truck on the way.</p>
+        </div>
+        <a class="btn btn-lg" data-tel="prefix" href="tel:5550100100">Call (555) 010-0100</a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong data-config="business.name">King Septic Services</strong>
+        <p data-config="business.tagline">Septic pumping, repair and installation you can count on</p>
+        <p data-config="business.license">Licensed &amp; insured</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a data-tel href="tel:5550100100">(555) 010-0100</a></li>
+          <li><a data-mailto href="mailto:office@example.com">office@example.com</a></li>
+          <li data-config="business.serviceArea">Anytown County and surrounding areas</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hours</h4>
+        <ul class="hours" data-hours></ul>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="maintenance.html">Maintenance</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">&copy; <span data-year>2026</span> <span data-config="business.name">King Septic Services</span>. All rights reserved.</div>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body></html>
