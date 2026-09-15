@@ -105,6 +105,21 @@ The estimate uses the widely published Penn State Extension table
 (approximately `years = 0.013 × gallons ÷ people − 0.65`, scaled by ⅔ with a
 garbage disposal). The recommendation shown to customers is capped at 5 years.
 
+## Claude Code skills
+
+`.claude/skills/` holds skills that Claude Code loads automatically when
+working in this repo, so UI changes follow good design and accessibility
+practice. Their sources and licenses:
+
+| Skill | Source | License |
+| --- | --- | --- |
+| `frontend-design` | [anthropics/skills](https://github.com/anthropics/skills) | Apache 2.0 |
+| `webapp-testing` | [anthropics/skills](https://github.com/anthropics/skills) | Apache 2.0 |
+| `web-design-guidelines` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | MIT |
+| `writing-guidelines` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | MIT |
+
+To update them, copy the newer folders from those repos over the ones here.
+
 ## Ideas for later
 
 * Customer accounts with service history and "next pumping due" reminders
