@@ -91,6 +91,36 @@
     window.addEventListener("hashchange", jump);
   }
 
+  function calculator() {
+    var form = document.querySelector("form[data-calculator]");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var out = form.querySelector(".calc-out");
+      var tank = parseInt(form.elements.tank.value, 10);
+      var people = parseInt(form.elements.people.value, 10);
+      var disposal = form.elements.disposal.checked;
+      var last = form.elements.last.value ? new Date(form.elements.last.value + "T00:00:00") : null;
+      if (!(tank >= 250 && tank <= 5000)) { out.innerHTML = "<p>Enter a tank size between 250 and 5,000 gallons.</p>"; return; }
+      if (!(people >= 1 && people <= 20)) { out.innerHTML = "<p>Enter a household size between 1 and 20.</p>"; return; }
+      var years = 0.013 * tank / people - 0.65;
+      if (disposal) years *= 2 / 3;
+      years = Math.max(0.5, years);
+      var recommended = Math.round(Math.min(5, years) * 10) / 10;
+      var html = '<p class="big">Pump about every ' + recommended + " years</p>";
+      if (last && !isNaN(last.getTime())) {
+        var due = new Date(last.getTime());
+        due.setMonth(due.getMonth() + Math.round(recommended * 12));
+        var text = due.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+        html += due < new Date() ? "<p><strong>Overdue.</strong> Service was due around " + text + ".</p>" : "<p>Next service due around <strong>" + text + "</strong>.</p>";
+      }
+      html += years > 5
+        ? "<p>Your tank could go longer, but we recommend service at least every five years so problems are caught while they are still cheap.</p>"
+        : "<p>Based on the Penn State Extension pumping table. Call us for a free assessment.</p>";
+      out.innerHTML = html;
+    });
+  }
+
   function text(el) { return el ? el.textContent.replace(/\s+/g, " ").trim() : ""; }
 
   function schema() {
@@ -147,5 +177,6 @@
   nav();
   anchors();
   forms();
+  calculator();
   schema();
 })();

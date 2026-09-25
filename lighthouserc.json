@@ -3,7 +3,9 @@
     "collect": {
       "staticDistDir": "./website",
       "url": [
-        "http://localhost/index.html"
+        "http://localhost/index.html",
+        "http://localhost/septic-pumping/index.html",
+        "http://localhost/service-area/vancouver/index.html"
       ],
       "numberOfRuns": 3,
       "settings": {

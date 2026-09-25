@@ -128,7 +128,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:0
 @media (max-width:639px){.cards{grid-template-columns:1fr}}
 
 .table-wrap{overflow-x:auto}
-.pricing{width:100%;border-collapse:separate;border-spacing:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden;min-width:520px}
+.pricing{width:100%;border-collapse:separate;border-spacing:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .pricing th{background:var(--tint);font:700 .9rem/1.2 "Barlow Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.08em;text-align:left;padding:.9rem 1.1rem}
 .pricing td{padding:.9rem 1.1rem;border-top:1px solid var(--line);vertical-align:top}
 .pricing td:last-child,.pricing th:last-child{text-align:right;white-space:nowrap}
@@ -181,3 +181,21 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline-offset:0
   body{padding-bottom:64px}
   .callbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;justify-content:center;align-items:center;min-height:64px;background:var(--orange);color:var(--orange-ink);text-decoration:none;font:700 1.2rem/1 "Barlow Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;letter-spacing:.03em;padding:.8rem 1rem calc(.8rem + env(safe-area-inset-bottom))}
 }
+
+.checklist{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:1rem 2.5rem}
+.checklist li{position:relative;padding-left:1.5rem;color:var(--ink-2)}
+.checklist li::before{content:"";position:absolute;left:0;top:.5em;width:10px;height:10px;background:var(--orange)}
+.checklist strong{color:var(--ink)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem 3rem;align-items:start}
+.two-col p:last-child{margin-bottom:0}
+.detail-list{list-style:none;padding:0;margin:0}
+.detail-list li{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--line)}
+.detail-list li:last-child{border-bottom:0}
+.detail-list span:first-child{color:var(--ink-3)}
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:1.5rem}
+.calc-out{margin-top:1.25rem;padding:1.25rem;background:var(--tint);border-radius:4px}
+.calc-out:empty{display:none}
+.calc-out .big{font:700 1.6rem/1.1 "Barlow Condensed","Arial Narrow",Impact,sans-serif;color:var(--price-ink);text-transform:uppercase;margin:0 0 .4rem;font-variant-numeric:tabular-nums}
+.calc-out p{margin:0 0 .5rem;color:var(--ink-2)}
+.calc-out p:last-child{margin-bottom:0}
+@media (max-width:759px){.checklist,.two-col{grid-template-columns:1fr}}
