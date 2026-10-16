@@ -1,7 +1,6 @@
-# Firebase (per-project files)
-.firebase/
-.firebaserc
-firebase-debug.log
+# Local tooling output
+node_modules/
+.lighthouseci/
 
 # IDE / OS
 .idea/
@@ -9,6 +8,3 @@ firebase-debug.log
 *.swp
 .DS_Store
 Thumbs.db
-
-# Node (only if you add tooling to the website)
-node_modules/

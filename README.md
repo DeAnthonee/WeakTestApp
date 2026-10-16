@@ -16,6 +16,7 @@ website/
 ├── septic-care-guide/         Pumping calculator, warning signs, care tips
 ├── about/  contact/  404.html
 ├── css/styles.css             Design tokens at the top; everything styled through them
+├── fonts/                     Self-hosted woff2 files (Barlow Condensed, Source Sans 3)
 ├── js/config.js               Business details, hours, cities, form key
 ├── js/main.js                 Injects config, nav toggle, forms, JSON-LD
 ├── assets/og.png              Social sharing image
@@ -50,14 +51,31 @@ copy are written directly in the HTML.
 
 ## Deploying to Cloudflare Pages
 
-1. Push this repository to GitHub.
-2. In Cloudflare Pages, create a project from the repo.
-3. Build command: none. Build output directory: `website`.
-4. Add the custom domain `northbankseptic.com`.
+1. In Cloudflare Pages, create a project from this repository's default
+   branch.
+2. Framework preset: none. Build command: leave empty. Build output
+   directory: `website`.
+3. Add the custom domain `northbankseptic.com`.
+
+Hosting notes:
+
+* No build step, no server code, no database, no environment variables.
+  Everything in `website/` is served as-is.
+* No `_redirects` or `_headers` file is needed. Page URLs are folders with
+  an `index.html`, and `website/404.html` is picked up automatically as the
+  not-found page.
+* All asset paths are root-relative (`/css/...`, `/fonts/...`), so the site
+  works at the apex domain over HTTPS. Fonts are self-hosted; the only
+  third-party request is the form submission below.
+* Quote forms POST JSON to Web3Forms (`https://api.web3forms.com/submit`)
+  with the public access key from `website/js/config.js`. The key is meant
+  to be public and is not a secret. Until a real key is set, submissions
+  show the fallback "call us" message.
+* Canonical URLs, Open Graph URLs and `sitemap.xml` are written for
+  `https://northbankseptic.com`.
 
 Any static host works the same way: publish the `website/` folder as the site
-root. Page URLs are folders with an `index.html`, so `/septic-pumping/`
-resolves everywhere without rewrite rules.
+root.
 
 ## Checks
 
@@ -71,5 +89,6 @@ resolves everywhere without rewrite rules.
 
 Colors, type and spacing are CSS custom properties at the top of
 `website/css/styles.css`; change a token and every page follows. Fonts are
-Barlow Condensed and Source Sans 3 from Google Fonts, loaded once in each
-page's `<head>`.
+Barlow Condensed and Source Sans 3, self-hosted as woff2 files in
+`website/fonts/` and declared at the top of the stylesheet; each page
+preloads the three faces used above the fold.
