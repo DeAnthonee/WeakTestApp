@@ -18,6 +18,8 @@ jobs:
         run: for f in website/js/*.js; do node --check "$f"; done
       - name: Check every page links to existing local files
         run: node scripts/check-links.js website
+      - name: Check search essentials (titles, descriptions, canonicals, sitemap)
+        run: node scripts/check-seo.js website
 
   lighthouse:
     name: Lighthouse (mobile)

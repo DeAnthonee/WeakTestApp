@@ -3,6 +3,7 @@ window.SITE = {
   legalName: "Northbank Septic LLC",
   url: "https://northbankseptic.com",
   FORM_ACCESS_KEY: "YOUR-WEB3FORMS-ACCESS-KEY",
+  GA4_MEASUREMENT_ID: "",
   tokens: {
     PHONE: "(360) 555-0100",
     EMAIL: "office@northbankseptic.com",

@@ -20,9 +20,17 @@ See README.md for the layout, placeholders and deployment.
 - Verify in a browser: serve `website/` with `python3 -m http.server` and
   screenshot at 1280px and 390px. Playwright and Chromium are available. Do
   not use `pkill -f` patterns that could match your own shell.
+- Search: every page needs a unique title (under 70 characters) and
+  description (50 to 160), exactly one `h1`, a canonical URL that matches
+  its folder path, Open Graph tags, a `data-schema` attribute on `<body>`,
+  and an entry in `sitemap.xml`. `scripts/check-seo.js` enforces this. The
+  plan and roadmap are in `docs/seo/`; DNS, Cloudflare and hosting changes
+  are written as work orders in `docs/seo/work-orders/` for the hosting
+  engineer, never done here.
 - Before pushing: `node --check website/js/*.js`,
-  `node scripts/check-links.js website`, and Lighthouse via `lhci` when
-  available (CI requires 95+ mobile on performance, accessibility, SEO).
+  `node scripts/check-links.js website`, `node scripts/check-seo.js website`,
+  and Lighthouse via `lhci` when available (CI requires 95+ mobile on
+  performance, accessibility, SEO).
 
 ## Skills in `.claude/skills/`
 
