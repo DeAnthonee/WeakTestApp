@@ -25,6 +25,27 @@
     });
   }
 
+  function track(name, params) {
+    if (typeof window.gtag === "function") window.gtag("event", name, params || {});
+  }
+
+  function analytics() {
+    var id = S.GA4_MEASUREMENT_ID;
+    if (!id || id.indexOf("[[") > -1) return;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date());
+    window.gtag("config", id);
+    var tag = document.createElement("script");
+    tag.async = true;
+    tag.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+    document.head.appendChild(tag);
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href^='tel:']");
+      if (a) track("phone_call", { page_path: location.pathname, link_text: text(a) });
+    });
+  }
+
   function nav() {
     var toggle = document.querySelector(".nav-toggle");
     var menu = document.getElementById("nav");
@@ -61,6 +82,7 @@
           msg.className = "form-msg";
           msg.setAttribute("role", "status");
           msg.textContent = "Got it, we'll call you within the hour.";
+          track("generate_lead", { page_path: location.pathname, service: data.service || "", form: form.getAttribute("data-form") });
           form.replaceWith(msg);
           msg.focus();
         }).catch(function () {
@@ -174,6 +196,7 @@
   }
 
   inject(document.documentElement);
+  analytics();
   nav();
   anchors();
   forms();

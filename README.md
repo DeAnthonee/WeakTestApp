@@ -21,8 +21,11 @@ website/
 ├── js/main.js                 Injects config, nav toggle, forms, JSON-LD
 ├── assets/og.png              Social sharing image
 ├── sitemap.xml  robots.txt  favicon.svg
+├── _headers                   Cloudflare Pages headers: noindex on *.pages.dev, security, font caching
 scripts/check-links.js         Verifies every local link resolves (used by CI)
+scripts/check-seo.js           Titles, descriptions, canonicals, sitemap and schema hooks (used by CI)
 lighthouserc.json              Lighthouse CI thresholds (95+ mobile)
+docs/seo/                      SEO plan, launch checklist and work orders for the hosting engineer
 ```
 
 ## Placeholders to fill in
@@ -40,7 +43,10 @@ block holds the values that appear across every page and in the JSON-LD:
 | `HOURS_SHORT` | One-line hours for the top bar |
 
 Also in `config.js`: `FORM_ACCESS_KEY` (your [Web3Forms](https://web3forms.com)
-access key; forms post there and show an inline confirmation), `hours`,
+access key; forms post there and show an inline confirmation),
+`GA4_MEASUREMENT_ID` (a Google Analytics `G-...` ID; when set, the site loads
+GA4 and sends a `phone_call` event for every tap on a phone number and a
+`generate_lead` event for every form that sends), `hours`,
 `openingHours` (schema.org hours), `sameAs` (social profile URLs; entries
 still wrapped in `[[ ]]` are ignored) and the `cities` list used for the
 service area schema.
@@ -61,9 +67,14 @@ Hosting notes:
 
 * No build step, no server code, no database, no environment variables.
   Everything in `website/` is served as-is.
-* No `_redirects` or `_headers` file is needed. Page URLs are folders with
-  an `index.html`, and `website/404.html` is picked up automatically as the
-  not-found page.
+* No `_redirects` file is needed. Page URLs are folders with an
+  `index.html`, and `website/404.html` is picked up automatically as the
+  not-found page. `website/_headers` adds `X-Robots-Tag: noindex` on the
+  `*.pages.dev` preview host so search engines index only the custom domain,
+  plus security headers and long caching for fonts.
+* `www.northbankseptic.com` should 301 to the apex domain with a Cloudflare
+  redirect rule rather than being added as a second custom domain; see
+  `docs/seo/work-orders/`.
 * All asset paths are root-relative (`/css/...`, `/fonts/...`), so the site
   works at the apex domain over HTTPS. Fonts are self-hosted; the only
   third-party request is the form submission below.
@@ -81,9 +92,20 @@ root.
 
 * `node scripts/check-links.js website` verifies every `href` and `src`
   points at a file that exists.
+* `node scripts/check-seo.js website` verifies every page has a unique title
+  and description, one `h1`, a canonical URL matching its path, Open Graph
+  tags and a `data-schema` hook, and that the sitemap and pages match.
 * `node --check website/js/*.js` catches syntax errors.
 * The `Website` GitHub Actions workflow runs both, plus Lighthouse CI on
   mobile with performance, accessibility and SEO required at 95 or higher.
+
+## Search
+
+`docs/seo/README.md` is the plan: what the site already does for search,
+what the owner must supply (real phone, address, Google Business Profile),
+and the roadmap. `docs/seo/launch-checklist.md` is the go-live list.
+Anything on DNS, Cloudflare or hosting is a work order in
+`docs/seo/work-orders/` for the hosting engineer.
 
 ## Editing the design
 
