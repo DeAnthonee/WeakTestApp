@@ -1,95 +1,41 @@
-/*
- * Site configuration. This is the ONE place to change business details.
- * (The app name shown when installed lives in manifest.webmanifest.)
- */
-window.SITE_CONFIG = {
-  business: {
-    name: "King Septic Services",
-    shortName: "King Septic",
-    tagline: "Septic pumping, repair and installation you can count on",
-    // Digits only; the site formats it for display and dialing.
-    phone: "5550100100",
-    email: "office@example.com",
-    serviceArea: "Anytown County and surrounding areas",
-    serviceTowns: ["Anytown", "Springfield", "Riverside", "Oak Hill", "Fairview", "Lakeside"],
-    hours: [
-      { label: "Monday – Friday", value: "7:00am – 6:00pm" },
-      { label: "Saturday", value: "8:00am – 2:00pm" },
-      { label: "Emergency service", value: "24 hours, 7 days" },
-    ],
-    license: "Licensed & insured · Lic. #0000000",
+window.SITE = {
+  name: "Northbank Septic",
+  legalName: "Northbank Septic LLC",
+  url: "https://northbankseptic.com",
+  FORM_ACCESS_KEY: "YOUR-WEB3FORMS-ACCESS-KEY",
+  tokens: {
+    PHONE: "(360) 555-0100",
+    EMAIL: "office@northbankseptic.com",
+    STREET: "1234 NE Example Rd, Vancouver, WA 98662",
+    CERT: "WA DOH Pumper Certification #00000",
+    GOOGLE_BUSINESS_PROFILE_URL: "https://g.page/northbank-septic",
+    HOURS_SHORT: "Mon–Fri 7am–5pm, Sat 8am–12pm"
   },
-
-  // Service catalog. `id` is used in URLs and stored with each request.
-  services: [
-    {
-      id: "pumping",
-      name: "Septic Tank Pumping",
-      summary: "Routine pumping and cleaning to keep your system healthy.",
-      details:
-        "We pump the tank, remove sludge and scum, check the baffles and inlet/outlet, and leave your site clean. Most households need this every 3 to 5 years.",
-      emergency: true,
-    },
-    {
-      id: "inspection",
-      name: "Septic Inspections",
-      summary: "Real-estate and routine inspections with a written report.",
-      details:
-        "A full inspection of the tank, distribution box and drain field, including a written report suitable for home sales and refinancing.",
-    },
-    {
-      id: "repair",
-      name: "Septic Repairs",
-      summary: "Baffles, pumps, lids, risers, lines and more.",
-      details:
-        "We diagnose and repair failed baffles, effluent pumps, float switches, cracked lids, collapsed lines and other common failures.",
-      emergency: true,
-    },
-    {
-      id: "installation",
-      name: "New System Installation",
-      summary: "Design, permitting and installation of new septic systems.",
-      details:
-        "From soil evaluation and permits to the final inspection, we handle conventional and alternative system installs for new builds and replacements.",
-    },
-    {
-      id: "drain-field",
-      name: "Drain Field Services",
-      summary: "Drain field evaluation, restoration and replacement.",
-      details:
-        "Standing water, soggy ground or sewage odors usually point to the drain field. We evaluate the field and recommend restoration or replacement.",
-    },
-    {
-      id: "grease-trap",
-      name: "Grease Trap Cleaning",
-      summary: "Scheduled grease trap service for restaurants and kitchens.",
-      details:
-        "Recurring grease trap pumping and cleaning for commercial kitchens, with service records for your health inspector.",
-    },
-    {
-      id: "emergency",
-      name: "24/7 Emergency Service",
-      summary: "Backups, overflows and alarms, any time of day.",
-      details:
-        "Sewage backing up, an alarm sounding or a tank overflowing is an emergency. Call us and we will dispatch a truck as soon as possible.",
-      emergency: true,
-    },
+  address: { city: "Vancouver", region: "WA", country: "US" },
+  hours: [
+    { days: "Monday – Friday", time: "7:00am – 5:00pm" },
+    { days: "Saturday", time: "8:00am – 12:00pm" },
+    { days: "Sunday", time: "Emergency calls only" }
   ],
-
-  /*
-   * Optional. Paste the "firebaseConfig" object from your Firebase project
-   * (Project settings → Your apps → Web app) to save quote requests to the
-   * `serviceRequests` Firestore collection. Leave as null and the contact form
-   * opens the visitor's email app with the request filled in instead.
-   *
-   * firebase: {
-   *   apiKey: "...",
-   *   authDomain: "your-project.firebaseapp.com",
-   *   projectId: "your-project",
-   *   storageBucket: "your-project.appspot.com",
-   *   messagingSenderId: "...",
-   *   appId: "...",
-   * },
-   */
-  firebase: null,
+  openingHours: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "07:00", closes: "17:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Saturday"], opens: "08:00", closes: "12:00" }
+  ],
+  sameAs: ["[[FACEBOOK_URL]]", "[[YELP_URL]]"],
+  cities: [
+    { slug: "vancouver", name: "Vancouver", county: "Clark" },
+    { slug: "battle-ground", name: "Battle Ground", county: "Clark" },
+    { slug: "camas", name: "Camas", county: "Clark" },
+    { slug: "washougal", name: "Washougal", county: "Clark" },
+    { slug: "ridgefield", name: "Ridgefield", county: "Clark" },
+    { slug: "la-center", name: "La Center", county: "Clark" },
+    { slug: "brush-prairie", name: "Brush Prairie", county: "Clark" },
+    { slug: "hockinson", name: "Hockinson", county: "Clark" },
+    { slug: "yacolt", name: "Yacolt", county: "Clark" },
+    { slug: "amboy", name: "Amboy", county: "Clark" },
+    { slug: "woodland", name: "Woodland", county: "Cowlitz" },
+    { slug: "kalama", name: "Kalama", county: "Cowlitz" },
+    { slug: "longview", name: "Longview", county: "Cowlitz" },
+    { slug: "kelso", name: "Kelso", county: "Cowlitz" }
+  ]
 };
