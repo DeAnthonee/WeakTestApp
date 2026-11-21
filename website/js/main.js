@@ -163,10 +163,8 @@
       telephone: tokens.PHONE,
       email: tokens.EMAIL,
       image: url + "/assets/og.png",
-      priceRange: "$$",
-      address: { "@type": "PostalAddress", streetAddress: tokens.STREET, addressLocality: S.address.city, addressRegion: S.address.region, addressCountry: S.address.country },
+      address: { "@type": "PostalAddress", addressLocality: S.address.city, addressRegion: S.address.region, addressCountry: S.address.country },
       areaServed: (S.cities || []).map(function (c) { return { "@type": "City", name: c.name + ", WA" }; }),
-      openingHoursSpecification: S.openingHours,
       sameAs: [tokens.GOOGLE_BUSINESS_PROFILE_URL].concat(S.sameAs || []).filter(function (u) { return u && u.indexOf("[[") === -1; })
     };
     var graph = [business];
